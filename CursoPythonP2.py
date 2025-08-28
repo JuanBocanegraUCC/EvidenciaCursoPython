@@ -82,3 +82,54 @@ planes["Duration_Category"] = np.select(conditions,
 
 sns.countplot(data=planes, x="Duration_Category")
 plt.show()
+
+#PARTE 2.6
+#Imprimir los cinco primeros valores de la columna "Duration"
+print(planes["Duration"].head())
+
+#Retirar "h" de la columna
+planes["Duration"] = planes["Duration"].str.replace("h", "")
+
+#Convertir la columna al tipo de datos float.
+planes["Duration"] = planes["Duration"].astype(float)
+
+#Trazar un histograma de los valores de "Duration".
+sns.histplot(data=planes, x="Duration", bins=20)
+plt.show()
+
+#PARTE 2.7
+#Añadir una columna a planes que contenga la desviación típica de "Price" basada en "Airline"
+planes["airline_price_st_dev"] = planes.groupby("Airline")["Price"].transform(lambda x: x.std())
+print(planes[["Airline", "airline_price_st_dev"]].value_counts())
+
+#Calcular la mediana de "Duration" en "Airline", almacenándola como una columna llamada "airline_median_duration"
+planes["airline_median_duration"] = planes.groupby("Airline")["Duration"].transform(lambda x: x.median())
+print(planes[["Airline","airline_median_duration"]].value_counts())
+
+#Encontrar la media "Price" por "Destination", guardándola como una columna llamada "price_destination_mean"
+planes["price_destination_mean"] = planes.groupby("Destination")["Price"].transform(lambda x: x.mean())
+print(planes[["Destination","price_destination_mean"]].value_counts())
+
+#PARTE 2.8
+#TrazaR la distribución de la columna "Price" de planes
+sns.histplot(data=planes, x="Price")
+plt.show()
+
+#Mostrar las estadísticas descriptivas de la duración del vuelo
+print(planes["Duration"].describe())
+
+#PARTE 2.9
+#Hallar los percentiles 75 y 25, guardando como price_seventy_fifth y price_twenty_fifth respectivamente
+price_seventy_fifth = planes["Price"].quantile(0.75)
+price_twenty_fifth = planes["Price"].quantile(0.25)
+
+#Calcular el IQR, almacenándolo como prices_iqr
+prices_iqr = price_seventy_fifth - price_twenty_fifth
+
+#Calcular los umbrales superior e inferior de valores atípicos
+upper = price_seventy_fifth + (1.5 * prices_iqr)
+lower = price_twenty_fifth - (1.5 * prices_iqr)
+
+#Eliminar los valores atípicos de planes
+planes = planes[(planes["Price"] > lower) & (planes["Price"] < upper)]
+print(planes["Price"].describe())
