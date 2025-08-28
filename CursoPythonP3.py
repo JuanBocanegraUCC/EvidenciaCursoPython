@@ -20,3 +20,30 @@ divorce["marriage_year"] = divorce["marriage_date"].dt.year
 #Crear un gráfico de líneas que muestre el número medio de hijos que tuvo una pareja durante su matrimonio, ordenado por el año en que la pareja se casó
 sns.lineplot(x="marriage_year", y="num_kids", data=divorce)
 plt.show()
+
+#PARTE 3.3
+#Crear un diagrama de dispersión que muestre marriage_duration en el eje x y num_kids en el eje y
+sns.scatterplot(x="marriage_duration", y="num_kids", data=divorce)
+plt.show()
+
+#PARTE 3.4
+#Crear un diagrama de pares para visualizar las relaciones entre income_woman y marriage_duration en el DataFrame divorce
+sns.pairplot(data=divorce, vars=["income_woman", "marriage_duration"])
+plt.show()
+
+#PARTE 3.5
+#Crear un gráfico de dispersión que muestre woman_age_marriage en el eje de abscisas y income_woman en el eje de ordenadas; cada punto de datos debe colorearse en función del nivel educativo de la mujer, representado por education_woman
+sns.scatterplot(x="woman_age_marriage", y="income_woman", hue="education_woman", data=divorce)
+plt.show()
+
+#PARTE 3.6
+#Crear un gráfico KDE que muestre marriage_duration en el eje x y una línea de color diferente para cada posible número de hijos que pueda tener una pareja, representada por num_kids
+sns.kdeplot(x="marriage_duration", hue="num_kids", data=divorce, common_norm=False)
+plt.show()
+
+#Observar que el gráfico muestra actualmente duraciones del matrimonio inferiores a cero; actualizar el gráfico KDE para que la duración del matrimonio no pueda suavizarse más allá de los puntos de datos extremos
+sns.kdeplot(data=divorce, x="marriage_duration", hue="num_kids", cut=0)
+
+#Actualizar el código del gráfico KDE del paso anterior para que muestre una función de distribución acumulativa para cada número de hijos que tiene una pareja
+sns.kdeplot(data=divorce, x="marriage_duration", hue="num_kids", cut=0, cumulative=True)
+plt.show()
