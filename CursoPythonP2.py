@@ -45,3 +45,40 @@ print(airline_prices)
 prices_dict = airline_prices.to_dict()
 planes["Price"] = planes["Price"].fillna(planes["Airline"].map(prices_dict))
 print(planes.isna().sum())
+
+#PARTE 2.3
+#Filtrar planes para las columnas que sean del tipo de datos "object"
+#Recorrer las columnas del conjunto de datos
+#Añadir el iterador de columna a la sentencia print y, a continuación, llama a la función para que devuelva el número de valores únicos de la columna
+non_numeric = planes.select_dtypes("object")
+for col in non_numeric.columns:
+    print(f"Number of unique values in {col} column: ", non_numeric[col].nunique())
+
+#PARTE 2.4
+#Crear una lista de categorías que contenga "Short-haul", "Medium", y "Long-haul"
+flight_categories = ["Short-haul", "Medium", "Long-haul"]
+
+#Crear short_flights, una cadena para capturar valores de "0h", "1h", "2h", "3h", o "4h" teniendo cuidado de evitar valores como "10h"
+#Crear medium_flights para capturar cualquier valor entre cinco y nueve horas
+#Crear long_flights para capturar cualquier valor comprendido entre 10 y 16 horas, ambos inclusive
+flight_categories = ["Short-haul", "Medium", "Long-haul"] 
+short_flights = "^0h|^1h|^2h|^3h|^4h"
+medium_flights = "^5h|^6h|^7h|^8h|^9h"
+long_flights = "^10h|^11h|^12h|^13h|^14h|^15h|^16h"
+
+#PARTE 2.5
+#Crear conditions, una lista que contenga subconjuntos de planes["Duration"] basados en short_flights, medium_flights y long_flights
+#Crear la columna "Duration_Category" llamando a una función que acepte tu lista conditions y flight_categories, estableciendo los valores no encontrados en "Extreme duration"
+#Crear un gráfico que muestre el recuento de cada categoría
+conditions = [
+    (planes["Duration"].str.contains(short_flights)),
+    (planes["Duration"].str.contains(medium_flights)),
+    (planes["Duration"].str.contains(long_flights))
+]
+
+planes["Duration_Category"] = np.select(conditions, 
+                                        flight_categories,
+                                        default="Extreme duration")
+
+sns.countplot(data=planes, x="Duration_Category")
+plt.show()
