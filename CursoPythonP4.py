@@ -48,3 +48,15 @@ salaries["salary_level"] = pd.cut(salaries["Salary_USD"],
 #Utilizar sns.countplot() para visualizar el recuento de "Company_Size", factorizando las etiquetas de nivel salarial
 sns.countplot(data=salaries, x="Company_Size", hue="salary_level")
 plt.show()
+
+#PARTE 4.5
+#Filtrar salaries donde "Employee_Location" es "US" o "GB", guardando como usa_and_gb
+#Utilizar usa_and_gb para crear un gráfico de barras que visualice "Salary_USD" frente a "Employee_Location"
+usa_and_gb = salaries[salaries["Employee_Location"].isin(["US", "GB"])]
+sns.barplot(data=usa_and_gb, x="Employee_Location", y="Salary_USD")
+plt.show()
+
+#PARTE 4.6
+#Elaborar un diagrama de barras comparando "Salary_USD" por "Company_Size", factorizando "Employment_Status"
+sns.barplot(data=salaries, x="Company_Size", y="Salary_USD", hue="Employment_Status")
+plt.show()
